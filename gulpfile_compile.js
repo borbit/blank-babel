@@ -3,13 +3,15 @@ var del = require('del')
 var gulp = require('gulp')
 var gulpLess = require('gulp-less')
 var gulpBabel = require('gulp-babel')
-var gulpRename = require('gulp-rename')
 var gulpBase64 = require('gulp-base64')
 var vinylPaths = require('vinyl-paths')
-var paths = require('./gulpfile_paths')
+var vinylTransform = require('vinyl-transform')
 var browserify = require('browserify')
 var babelify = require('babelify')
 var envify = require('envify')
+
+// config
+var paths = require('./gulpfile_paths')
 
 //
 //
@@ -31,7 +33,6 @@ gulp.task('compile-page-less', () => {
   return gulp
     .src(paths.globPageLess)
     .pipe(compile)
-    .pipe(gulpRename({extname: '.css'}))
     .pipe(base64Encode)
     .pipe(gulp.dest(paths.assetsDir))
 })
@@ -56,7 +57,6 @@ gulp.task('compile-common-less', () => {
   return gulp
     .src(paths.commonLess)
     .pipe(compile)
-    .pipe(gulpRename({extname: '.css'}))
     .pipe(base64Encode)
     .pipe(gulp.dest(paths.assetsDir))
 })
@@ -64,43 +64,53 @@ gulp.task('compile-common-less', () => {
 //
 //
 gulp.task('compile-page-js', () => {
-  var b = browserify('./public/pages/index/index.js', {debug: true});
+  var b = browserify({debug: true});
 
-  b.transform(babelify)
-  // b.transform(envify({'NODE_ENV': ':)'}))
+  b.transform(babelify);
 
   getExternalModules().forEach((module) => {
     b.exclude(module.name)
   })
 
-  b.on('error', (err) => {
+  var bundle = vinylTransform(function(filename) {
+    b.add(filename)
+    return b.bundle()
+  });
+
+  bundle.on('error', (err) => {
     console.log('browserify', err.message)
   })
-    
-  b = b.bundle()
-  b.pipe(fs.createWriteStream('./public/assets/index/index.js'))
-  return b
+
+  return gulp
+    .src(paths.globPageJs)
+    .pipe(bundle)
+    .pipe(gulp.dest(paths.assetsDir));
 })
 
 //
 //
 gulp.task('compile-common-js', () => {
-  var b = browserify(config.commonJs, {debug: true});
+  var b = browserify({debug: true});
 
-  b.transform(babelify)
-  // b.transform(envify({'NODE_ENV': ':)'}))
+  b.transform(babelify);
 
   getExternalModules().forEach((module) => {
     b.require(module.path, {expose: module.name})
   })
 
-  b.on('error', (err) => {
+  var bundle = vinylTransform(function(filename) {
+    b.add(filename)
+    return b.bundle()
+  });
+
+  bundle.on('error', (err) => {
     console.log('browserify', err.message)
   })
-    
-  b = b.bundle()
-  b.pipe(fs.createWriteStream('./public/assets/config.js'))
-  return b
+
+  return gulp
+    .src(paths.commonJs)
+    .pipe(bundle)
+    .pipe(gulp.dest(paths.assetsDir));
 })
 
 //
@@ -108,7 +118,7 @@ gulp.task('compile-common-js', () => {
 gulp.task('compile', [
   'compile-common-less'
 , 'compile-page-less'
-// , 'compile-common-js'
+, 'compile-common-js'
 , 'compile-page-js'
 ])
 

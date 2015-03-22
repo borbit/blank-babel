@@ -14,7 +14,6 @@
     "express": "latest",
     "gulp": "latest",
     "gulp-base64": "latest",
-    "gulp-buffer": "latest",
     "gulp-csso": "latest",
     "gulp-less": "latest",
     "gulp-replace": "latest",
@@ -23,6 +22,7 @@
     "lodash": "latest",
     "nodemon": "latest",
     "react": "latest",
+    "vinyl-transform": "latest",
     "vinyl-paths": "latest"
   }
 }
