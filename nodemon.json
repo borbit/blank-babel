@@ -1,6 +1,6 @@
 {
-  "ext": "coffee",
+  "ext": "js",
   "watch": [
-    "index.coffee"
+    "index.js"
   ]
 }

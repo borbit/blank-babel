@@ -1,0 +1,1 @@
+require('react/addons') //@expose as react
