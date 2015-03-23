@@ -1,11 +1,11 @@
-Blank
-=====
+Blank-babel
+===========
 
 Front-end server starter kit based on:
 - [Gulp](http://gulpjs.com)
 - [Express](http://expressjs.com/)
 - [Browserify](http://browserify.org/)
-- [Babel](http://babel.io/)
+- [Babel](http://babeljs.io/)
 - [Less](http://lesscss.org/)
 - [React](http://facebook.github.io/react/)
 
