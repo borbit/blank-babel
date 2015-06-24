@@ -2,13 +2,13 @@ var fs = require('fs')
 var del = require('del')
 var gulp = require('gulp')
 var gulpLess = require('gulp-less')
-var gulpBabel = require('gulp-babel')
 var gulpBase64 = require('gulp-base64')
-var vinylPaths = require('vinyl-paths')
-var vinylTransform = require('vinyl-transform')
 var browserify = require('browserify')
 var babelify = require('babelify')
-var envify = require('envify')
+
+var es = require('event-stream')
+var source = require('vinyl-source-stream')
+var glob = require('glob')
 
 // config
 var paths = require('./gulpfile_paths')
@@ -64,53 +64,53 @@ gulp.task('compile-common-less', () => {
 //
 //
 gulp.task('compile-page-js', () => {
-  var b = browserify({debug: true});
+  return glob(paths.globPageJs, (err, entries) => {
+    if (err) throw err
 
-  b.transform(babelify);
+    var tasks = entries.map((entry) => {
+      var b = browserify({
+        entries: entry
+      , transform: [babelify]
+      , verbose: true
+      , debug: true
+      })
 
-  getExternalModules().forEach((module) => {
-    b.exclude(module.name)
+      getExternalModules().forEach((module) => {
+        b.exclude(module.name)
+      })
+      b.on('error', (err) => {
+        console.log('browserify', err.message)
+      })
+
+      return b.bundle()
+        .pipe(source(entry.replace(paths.pagesDir, '')))
+        .pipe(gulp.dest(paths.assetsDir))
+    })
+
+    return es.merge.apply(null, tasks);
   })
-
-  var bundle = vinylTransform(function(filename) {
-    b.add(filename)
-    return b.bundle()
-  });
-
-  bundle.on('error', (err) => {
-    console.log('browserify', err.message)
-  })
-
-  return gulp
-    .src(paths.globPageJs)
-    .pipe(bundle)
-    .pipe(gulp.dest(paths.assetsDir));
 })
 
 //
 //
 gulp.task('compile-common-js', () => {
-  var b = browserify({debug: true});
-
-  b.transform(babelify);
+  var b = browserify({
+    entries: paths.commonJs
+  , transform: [babelify]
+  , verbose: true
+  , debug: true
+  })
 
   getExternalModules().forEach((module) => {
     b.require(module.path, {expose: module.name})
   })
-
-  var bundle = vinylTransform(function(filename) {
-    b.add(filename)
-    return b.bundle()
-  });
-
-  bundle.on('error', (err) => {
+  b.on('error', (err) => {
     console.log('browserify', err.message)
   })
 
-  return gulp
-    .src(paths.commonJs)
-    .pipe(bundle)
-    .pipe(gulp.dest(paths.assetsDir));
+  return b.bundle()
+    .pipe(source(paths.commonJs.replace(paths.jsDir, '')))
+    .pipe(gulp.dest(paths.assetsDir))
 })
 
 //
