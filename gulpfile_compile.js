@@ -3,6 +3,8 @@ var del = require('del')
 var gulp = require('gulp')
 var gulpLess = require('gulp-less')
 var gulpBase64 = require('gulp-base64')
+var gulpPostcss = require('gulp-postcss')
+var autoprefixer = require('autoprefixer-core')
 var browserify = require('browserify')
 var babelify = require('babelify')
 
@@ -34,6 +36,7 @@ gulp.task('compile-page-less', () => {
     .src(paths.globPageLess)
     .pipe(compile)
     .pipe(base64Encode)
+    .pipe(gulpPostcss([autoprefixer()]))
     .pipe(gulp.dest(paths.assetsDir))
 })
 
@@ -63,8 +66,8 @@ gulp.task('compile-common-less', () => {
 
 //
 //
-gulp.task('compile-page-js', () => {
-  return glob(paths.globPageJs, (err, entries) => {
+gulp.task('compile-page-js', (end) => {
+  glob(paths.globPageJs, (err, entries) => {
     if (err) throw err
 
     var tasks = entries.map((entry) => {
@@ -87,7 +90,7 @@ gulp.task('compile-page-js', () => {
         .pipe(gulp.dest(paths.assetsDir))
     })
 
-    return es.merge.apply(null, tasks);
+    es.merge.apply(null, tasks).on('end', end)
   })
 })
 

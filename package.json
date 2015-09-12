@@ -9,6 +9,7 @@
     "browserify": "latest",
     "consolidate": "latest",
     "del": "latest",
+    "event-stream": "latest",
     "ejs": "latest",
     "envify": "latest",
     "express": "latest",
@@ -19,10 +20,11 @@
     "gulp-replace": "latest",
     "gulp-rev": "latest",
     "gulp-uglify": "latest",
+    "gulp-postcss": "latest",
+    "autoprefixer-core": "latest",
     "lodash": "latest",
     "nodemon": "latest",
     "react": "latest",
-    "vinyl-transform": "latest",
-    "vinyl-paths": "latest"
+    "vinyl-source-stream": "latest"
   }
 }
