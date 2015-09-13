@@ -4,7 +4,7 @@ var gulp = require('gulp')
 var gulpLess = require('gulp-less')
 var gulpBase64 = require('gulp-base64')
 var gulpPostcss = require('gulp-postcss')
-var autoprefixer = require('autoprefixer-core')
+var autoprefixer = require('autoprefixer')
 var browserify = require('browserify')
 var babelify = require('babelify')
 

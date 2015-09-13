@@ -21,10 +21,11 @@
     "gulp-rev": "latest",
     "gulp-uglify": "latest",
     "gulp-postcss": "latest",
-    "autoprefixer-core": "latest",
+    "autoprefixer": "latest",
     "lodash": "latest",
     "nodemon": "latest",
     "react": "latest",
-    "vinyl-source-stream": "latest"
+    "vinyl-source-stream": "latest",
+    "glob": "latest"
   }
 }
