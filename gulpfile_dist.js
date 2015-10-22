@@ -38,8 +38,12 @@ gulp.task('css-rev', ['rev'], () => {
   let regexp = /url\([^data:image]['"]?([^\)'"]*)['"]?\)/g
   let replace = gulpReplace(regexp, (__, url) => {
     url = _.trim(url, '/')
-    url = `url("/${rev[url] || url}")`
-    return url
+    if (config.env == 'production') {
+      url = `${config.aws_assets_path}/${rev[url]}`
+    } else if (rev[url]) {
+      url = rev[url]
+    }
+    return `url("/${url}")`
   })
 
   return gulp
