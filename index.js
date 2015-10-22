@@ -35,7 +35,7 @@ app.locals.asset = (src) => {
 }
 
 var routes = [
-  require('routes/index')
+  require('lib/routes/index')
 ]
 
 routes.forEach((route) => {
