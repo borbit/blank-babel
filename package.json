@@ -29,6 +29,7 @@
     "lodash": "latest",
     "nodemon": "latest",
     "react": "latest",
+    "react-dom": "^0.14.0",
     "vinyl-source-stream": "latest"
   }
 }

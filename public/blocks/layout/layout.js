@@ -1,7 +1,8 @@
 var React = require('react')
-      
+var render = require('./layout.jsx')
+
 module.exports = React.createClass({
   render() {
-    return <li className="list__item">{this.props.title}</li>
+    return render.call(this)
   }
 })

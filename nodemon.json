@@ -1,6 +1,8 @@
 {
   "ext": "js",
   "watch": [
-    "index.js"
+    "index.js",
+    "config.js",
+    "lib"
   ]
 }

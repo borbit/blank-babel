@@ -1,12 +1,5 @@
-var React = require('react')
-var List = require('../../blocks/list/list')
+var ReactDOM = require('react-dom')
+var Layout = require('../../blocks/layout/layout')
 
-var items = [
-  {title: 'List item 1'},
-  {title: 'List item 2'},
-  {title: 'List item 3'},
-  {title: 'List item 4'}
-]
-
-React.render(<List items={items}/>, document.getElementById('list'))
+ReactDOM.render(<Layout/>, document.getElementsByTagName('main')[0])
 

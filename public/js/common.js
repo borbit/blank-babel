@@ -1,1 +1,2 @@
-require('react/addons') //@expose as react
+require('react') //@expose as react
+require('react-dom') //@expose
