@@ -42,18 +42,20 @@ routes.forEach((route) => {
   route(app)
 })
 
+app.use((req, res) => {
+  res.status(404)
+  res.send('404')
+})
+
 app.use(function(err, req, res, next) {
   res.status(500)
-  res.json({
-    error: err.message
-  })
+  res.send(err.message)
 })
 
 app.listen(config.port, null, (err) => {
-  if (err) throw err
+  if (err) {
+    console.log(err)
+  }
 
-  console.log('Application server started on', {
-    host: config.host,
-    port: config.port
-  })
+  console.log('server started :%d', config.port)
 })
